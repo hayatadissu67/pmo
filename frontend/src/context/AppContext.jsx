@@ -5,8 +5,14 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
    const [user, setUser] = useState(null);
+
   const login = async (credentials) => {
     const data = await AuthService.login(credentials);
+    setUser(data.user);
+  };
+
+  const register = async (userData) => {
+    const data = await AuthService.register(userData);
     setUser(data.user);
   };
 
@@ -15,7 +21,7 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AppContext.Provider value={{ user, login, logout }}>
+    <AppContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AppContext.Provider>
   );

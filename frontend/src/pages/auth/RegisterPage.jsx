@@ -2,18 +2,18 @@ import React, { useState } from "react";
 import InputField from "../../components/forms/InputField";
 import Checkbox from "../../components/forms/Checkbox";
 import Button from "../../components/buttons/Button";
-
+import { useAuth } from "../../context/AppContext";
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-
+const { register } = useAuth();
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ name, email, password, confirmPassword, agreeTerms });
-   
+    register({ name, email, password });
   };
 
   return (
