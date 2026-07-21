@@ -1,25 +1,21 @@
 import React, { createContext, useContext, useState } from "react";
-
+import { AuthService } from "../services/AuthService"
 const AppContext = createContext();
 
 
 export const AppProvider = ({ children }) => {
-  
-  const [state, setState] = useState({
-    user: null,
-    isAuthenticated: false,
-  });
-
-  const login = (userData) => {
-    setState({ ...state, user: userData, isAuthenticated: true });
+   const [user, setUser] = useState(null);
+  const login = async (credentials) => {
+    const data = await AuthService.login(credentials);
+    setUser(data.user);
   };
 
   const logout = () => {
-    setState({ ...state, user: null, isAuthenticated: false });
+    setUser(null);
   };
 
   return (
-    <AppContext.Provider value={{ state, login, logout }}>
+    <AppContext.Provider value={{ user, login, logout }}>
       {children}
     </AppContext.Provider>
   );
