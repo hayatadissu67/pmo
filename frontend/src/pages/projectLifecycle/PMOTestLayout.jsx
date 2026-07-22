@@ -6,9 +6,10 @@ import ProjectStatus from './ProjectStatus';
 import Flow from './Flow';
 import Phases from './Phases';
 import CreateProject from './CreateProject';
+import AIAssistant from '../aiProject/AIProjectPage';
 
 export default function PMOTestLayout() {
-  // Navigation active view: 'all-overview', 'details', 'milestones', 'status', 'workflow', 'files', 'create'
+  // Navigation active view: 'all-overview', 'details', 'milestones', 'status', 'workflow', 'files', 'create', 'ai'
   const [activePage, setActivePage] = useState('all-overview');
 
   // Multi-project dataset for PM portfolio oversight
@@ -89,9 +90,8 @@ export default function PMOTestLayout() {
   );
   const inProgressCount = projectsList.filter((p) => p.status === 'In Progress').length;
   const completedCount = projectsList.filter((p) => p.status === 'Completed').length;
-  const planningCount = projectsList.filter((p) => p.status === 'Planning').length;
 
-  // Sidebar navigation items
+  // Sidebar navigation items (includes AI Assistant)
   const lifecycleNav = [
     { id: 'all-overview', label: 'Portfolio Overview', icon: '📊' },
     { id: 'details', label: 'Project Details', icon: '📋' },
@@ -99,6 +99,7 @@ export default function PMOTestLayout() {
     { id: 'status', label: 'Project Status', icon: '📈' },
     { id: 'workflow', label: 'Phases & Workflow', icon: '🔄' },
     { id: 'files', label: 'Project Files', icon: '📁' },
+    { id: 'ai', label: 'AI Project Assistant', icon: '🤖' },
     { id: 'create', label: 'Create Project', icon: '➕' },
   ];
 
@@ -190,11 +191,11 @@ export default function PMOTestLayout() {
         <main className="flex-1 overflow-y-auto p-6 bg-slate-50">
           <div className="max-w-6xl mx-auto space-y-6">
             
-            {/* ==================== PORTFOLIO OVERVIEW VIEW ==================== */}
+            {/* PORTFOLIO OVERVIEW */}
             {activePage === 'all-overview' && (
               <div className="space-y-6">
                 
-                {/* Executive KPI Stats Grid */}
+                {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
                     <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Managed</span>
@@ -229,7 +230,7 @@ export default function PMOTestLayout() {
                   </div>
                 </div>
 
-                {/* Progress Breakdown Bar Chart Visualizer */}
+                {/* Progress Breakdown */}
                 <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
                   <div className="flex justify-between items-center">
                     <div>
@@ -263,7 +264,7 @@ export default function PMOTestLayout() {
                   </div>
                 </div>
 
-                {/* All Projects Manager Interactive Table */}
+                {/* Projects Table */}
                 <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
                   <div className="p-5 border-b border-slate-100 flex justify-between items-center">
                     <h3 className="text-sm font-bold text-slate-800">Manager Portfolio Matrix</h3>
@@ -335,7 +336,7 @@ export default function PMOTestLayout() {
               </div>
             )}
 
-            {/* ==================== SINGLE PROJECT VIEWS ==================== */}
+            {/* PROJECT DETAILS VIEW */}
             {activePage === 'details' && (
               <ProjectDetails
                 projectData={activeProject}
@@ -343,10 +344,12 @@ export default function PMOTestLayout() {
               />
             )}
 
+            {/* MILESTONES VIEW */}
             {activePage === 'milestones' && (
               <Milestones projectCode={activeProject.code} />
             )}
 
+            {/* STATUS VIEW */}
             {activePage === 'status' && (
               <ProjectStatus
                 projectData={activeProject}
@@ -354,6 +357,7 @@ export default function PMOTestLayout() {
               />
             )}
 
+            {/* PHASES & WORKFLOW VIEW */}
             {activePage === 'workflow' && (
               <div className="bg-white p-6 rounded-2xl shadow-xs border border-slate-200 space-y-6">
                 <Flow activeStep={6} />
@@ -364,10 +368,20 @@ export default function PMOTestLayout() {
               </div>
             )}
 
+            {/* FILES VIEW */}
             {activePage === 'files' && (
               <ProjectFiles projectCode={activeProject.code} />
             )}
 
+            {/* AI ASSISTANT VIEW */}
+            {activePage === 'ai' && (
+              <AIAssistant
+                projectsList={projectsList}
+                selectedProject={activeProject}
+              />
+            )}
+
+            {/* CREATE PROJECT VIEW */}
             {activePage === 'create' && (
               <CreateProject
                 onProjectCreated={(newProj) => {

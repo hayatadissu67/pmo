@@ -43,10 +43,8 @@ export default function CreateProject({ onProjectCreated }) {
         <h2 className="text-xl font-bold text-slate-900">Create New Project</h2>
         <p className="text-xs text-slate-500">Define governance parameters, leadership, and assigned team members</p>
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          
           {/* Project Code */}
           <div>
             <label className="text-[11px] font-bold text-slate-600 uppercase block mb-1">
