@@ -1,10 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {  Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
 import DashboardLayout from "../layouts/DashboardLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import AdminLayout from "../layouts/AdminLayout";
-
 // Pages
 import UserList from "../pages/userManagement/UserList";
 import ProjectDashboard from "../pages/projectLifecycle/ProjectDashboard";
@@ -19,25 +18,49 @@ import ReportsPage from "../pages/reports/ReportsPage";
 import AIProjectPage from "../pages/aiProject/AIProjectPage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import AdminPage from "../pages/systemAdmin/AdminPage";
-
-
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
+import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
+import AddUser from "../pages/userManagement/AddUser";
+import EditUser from "../pages/userManagement/EditUser";
+import UserDetails from "../pages/userManagement/UserDetails";
+import UserProfile from "../pages/userManagement/UserProfile";
+import AssignRole from "../pages/userManagement/AssignRole";
+import ProtectedRoute from "../pages/auth/ProtectedRoute";
 
-export default function AppRouter() {
+export default function AppRoutes() {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <Routes>
-    
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forget" element={<ForgotPasswordPage />} />
+          <Route path="/forbid" element={<UnauthorizedPage />} />
         </Route>
-        {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
 
-        <Route element={<DashboardLayout />}>
-        <Route path="/" element={<ProjectDashboard />} />
+       <Route
+ element={
+   <ProtectedRoute
+     allowedRoles={[
+       "PMO ADMIN",
+       "PROJECT_MANAGER",
+       "TEAM_MEMBER",
+       "INTERN"
+     ]}
+   >
+     <DashboardLayout />
+   </ProtectedRoute>
+ }
+>
+          <Route path="/" element={<ProjectDashboard />} />
           <Route path="/users" element={<UserList />} />
+          <Route path="/addusers" element={<AddUser />} />
+          <Route path="/editUsers/:id" element={<EditUser />} />
+          <Route path="/detailUsers/:id" element={<UserDetails />} />
+          <Route path="/Usersprofile" element={<UserProfile />} />
+          <Route path="/AssignRole/:id" element={<AssignRole />} />
           <Route path="/tasks" element={<TaskBoard />} />
           <Route path="/resources" element={<ResourcePage />} />
           <Route path="/risks" element={<RiskPage />} />
@@ -50,9 +73,14 @@ export default function AppRouter() {
           <Route path="/notifications" element={<NotificationsPage />} />
         </Route>
 
-      
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminPage />} />
+        <Route
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/adminpage" element={<ProjectDashboard />} />
         </Route>
       </Routes>
     </div>
