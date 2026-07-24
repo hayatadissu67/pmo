@@ -1,0 +1,77 @@
+.sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: #1a202c;
+    color: #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+    height: 100vh;
+}
+
+.sidebar .logo {
+    padding: 16px 16px 12px 16px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    border-bottom: 1px solid #2d3748;
+}
+
+.sidebar .logo span {
+    color: #63b3ed;
+    font-weight: 400;
+}
+
+.module {
+    border-bottom: 1px solid #2d3748;
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    color: #a0aec0;
+    transition: 0.2s;
+    user-select: none;
+}
+
+.module-header:hover {
+    background: #2d3748;
+    color: #ffffff;
+}
+
+.module-header .arrow {
+    transition: 0.2s;
+    font-size: 12px;
+}
+
+.sub-modules {
+    display: flex;
+    flex-direction: column;
+    background: #2d3748;
+}
+
+.sub-item {
+    padding: 8px 16px 8px 32px;
+    font-size: 13px;
+    color: #a0aec0;
+    cursor: pointer;
+    transition: 0.2s;
+    border-left: 3px solid transparent;
+}
+
+.sub-item:hover {
+    background: #4a5568;
+    color: #ffffff;
+}
+
+.sub-item.active {
+    color: #ffffff;
+    border-left-color: #63b3ed;
+    background: #4a5568;
+}

@@ -1,0 +1,195 @@
+.calendar-container {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #edf2f7;
+    padding: 24px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.calendar-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.btn-nav {
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.btn-nav:hover {
+    background: #f7fafc;
+}
+
+.btn-new-meeting {
+    padding: 8px 16px;
+    background: #2b6cb0;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-new-meeting:hover {
+    background: #1a4f7a;
+}
+
+.meeting-form {
+    background: #f7fafc;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.meeting-form h4 {
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 8px;
+}
+
+.form-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 8px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.day-header {
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: #718096;
+}
+
+.day-cell {
+    padding: 8px;
+    min-height: 60px;
+    background: #f7fafc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+}
+
+.day-cell:hover {
+    background: #edf2f7;
+}
+
+.day-cell.today {
+    background: #ebf8ff;
+    border: 2px solid #2b6cb0;
+}
+
+.day-cell.has-meeting {
+    background: #fefcbf;
+}
+
+.day-cell.empty {
+    background: transparent;
+    cursor: default;
+}
+
+.day-number {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.meeting-dots {
+    display: flex;
+    gap: 3px;
+    margin-top: 4px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2b6cb0;
+}
+
+.upcoming-meetings {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #edf2f7;
+}
+
+.upcoming-meetings h4 {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.upcoming-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.upcoming-item:last-child {
+    border-bottom: none;
+}
+
+.upcoming-time {
+    font-size: 13px;
+    color: #718096;
+    min-width: 120px;
+}
+
+.upcoming-title {
+    font-weight: 600;
+    font-size: 14px;
+    flex: 1;
+}
+
+.upcoming-organizer {
+    font-size: 13px;
+    color: #718096;
+}
