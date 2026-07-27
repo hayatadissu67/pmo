@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputField from "../../components/forms/InputField";
 import Checkbox from "../../components/forms/Checkbox";
 import Button from "../../components/buttons/Button";
-import { useAuth } from "../../context/AppContext";
+import {AppProvider} from "../../context/AppContext";
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

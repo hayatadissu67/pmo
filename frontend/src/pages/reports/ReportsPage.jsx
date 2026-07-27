@@ -1,52 +1,52 @@
 import React, { useState } from 'react';
 
 // Dashboard Components
-import ReportsOverview from './components/ReportsOverview';
-import ReportsStatistics from './components/ReportsStatistics';
-import TotalReports from './components/TotalReports';
-import RecentReports from './components/RecentReports';
-import ReportStatus from './components/ReportStatus';
-import QuickActions from './components/QuickActions';
-import ReportSummary from './components/ReportSummary';
+import ReportsOverview from './ReportsOverview';
+import ReportsStatistics from './ReportsStatistics';
+import TotalReports from './TotalReports';
+import RecentReports from './RecentReports';
+import ReportStatus from './ReportStatus';
+import QuickActions from './QuickActions';
+import ReportSummary from './ReportSummary';
 
 // All Reports Components
-import ReportsList from './components/ReportsList';
-import ViewReport from './components/ViewReport';
-import SearchReports from './components/SearchReports';
-import FilterReports from './components/FilterReports';
-import SortReports from './components/SortReports';
-import ReportDetails from './components/ReportDetails';
+import ReportsList from './ReportsList';
+import ViewReport from './ViewReport';
+import SearchReports from './SearchReports';
+import FilterReports from './FilterReports';
+import SortReports from './SortReports';
+import ReportDetails from './ReportDetails';
 
 // Portfolio Components
-import PortfolioList from './components/PortfolioList';
-import PortfolioOverview from './components/PortfolioOverview';
-import PortfolioPerformance from './components/PortfolioPerformance';
-import PortfolioProgress from './components/PortfolioProgress';
-import PortfolioBudget from './components/PortfolioBudget';
-import PortfolioRisks from './components/PortfolioRisks';
+import PortfolioList from './PortfolioList';
+import PortfolioOverview from './PortfolioOverview';
+import PortfolioPerformance from './PortfolioPerformance';
+import PortfolioProgress from './PortfolioProgress';
+import PortfolioBudget from './PortfolioBudget';
+import PortfolioRisks from './PortfolioRisks';
 
 // Template Components
-import TemplateList from './components/TemplateList';
-import CreateTemplate from './components/CreateTemplate';
-import EditTemplate from './components/EditTemplate';
-import DeleteTemplate from './components/DeleteTemplate';
-import PreviewTemplate from './components/PreviewTemplate';
-import UseTemplate from './components/UseTemplate';
+import TemplateList from './TemplateList';
+import CreateTemplate from './CreateTemplate';
+import EditTemplate from './EditTemplate';
+import DeleteTemplate from './DeleteTemplate';
+import PreviewTemplate from './PreviewTemplate';
+import UseTemplate from './UseTemplate';
 
 // Generate Reports Components
-import SelectProject from './components/SelectProject';
-import SelectPortfolio from './components/SelectPortfolio';
-import SelectTemplate from './components/SelectTemplate';
-import SelectDateRange from './components/SelectDateRange';
-import GenerateReport from './components/GenerateReport';
-import ReportPreview from './components/ReportPreview';
+import SelectProject from './SelectProject';
+import SelectPortfolio from './SelectPortfolio';
+import SelectTemplate from './SelectTemplate';
+import SelectDateRange from './SelectDateRange';
+import GenerateReport from './GenerateReport';
+import ReportPreview from './ReportPreview';
 
 // Report History Components
-import PreviouslyGenerated from './components/PreviouslyGenerated';
-import DownloadHistory from './components/DownloadHistory';
-import SharedReports from './components/SharedReports';
-import ArchivedReports from './components/ArchivedReports';
-import ReportActivity from './components/ReportActivity';
+import PreviouslyGenerated from './PreviouslyGenerated';
+import DownloadHistory from './DownloadHistory';
+import SharedReports from './SharedReports';
+import ArchivedReports from './ArchivedReports';
+import ReportActivity from './ReportActivity';
 
 export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState('dashboard');
