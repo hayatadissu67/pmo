@@ -1,45 +1,85 @@
 import React, { useState } from 'react';
 
-export default function AddBudget() {
-  const [budgetName, setBudgetName] = useState('');
-  const [totalBudget, setTotalBudget] = useState('');
+export default function AddBudget({ onAddBudget }) {
+  const [formData, setFormData] = useState({
+    title: '',
+    category: '',
+    amount: '',
+    timeline: '',
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Asitti daataa gara Backend/API ykn State-tti ergita
-    console.log("Budget Saved:", { budgetName, totalBudget });
-    alert("Budget successfully saved!");
+    if (!formData.title || !formData.amount) return;
+
+    if (onAddBudget) {
+      onAddBudget({
+        id: Date.now(),
+        ...formData,
+        amount: parseFloat(formData.amount),
+      });
+    }
+
+    setFormData({ title: '', category: '', amount: '', timeline: '' });
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Add New Budget</h1>
-      <br />
-      
-      <form onSubmit={handleSubmit}>
-        <label>Budget Name</label>
-        <br />
-        <input 
-          type="text" 
-          placeholder="Enter Budget Name" 
-          value={budgetName}
-          onChange={(e) => setBudgetName(e.target.value)}
-          required
-        />
-        <br /><br />
+    <div className="bg-white p-6 rounded-xl shadow border border-gray-100 max-w-lg mx-auto">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">Add New Budget Plan</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Budget Title</label>
+          <input
+            type="text"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="mt-1 w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Fkn: Cloud Migration Phase 1"
+            required
+          />
+        </div>
 
-        <label>Total Budget</label>
-        <br />
-        <input 
-          type="number" 
-          placeholder="Enter Amount" 
-          value={totalBudget}
-          onChange={(e) => setTotalBudget(e.target.value)}
-          required
-        />
-        <br /><br />
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Category</label>
+          <input
+            type="text"
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            className="mt-1 w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Fkn: Infrastructure"
+            required
+          />
+        </div>
 
-        <button type="submit">Save Budget</button>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Amount ($)</label>
+          <input
+            type="number"
+            value={formData.amount}
+            onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+            className="mt-1 w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            placeholder="0.00"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Timeline / Date</label>
+          <input
+            type="date"
+            value={formData.timeline}
+            onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
+            className="mt-1 w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 text-sm transition"
+        >
+          Save Budget
+        </button>
       </form>
     </div>
   );
