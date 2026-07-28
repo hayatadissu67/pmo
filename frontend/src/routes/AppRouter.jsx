@@ -1,15 +1,11 @@
-<<<<<<< HEAD
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-=======
-import {  Routes, Route, Navigate } from "react-router-dom";
->>>>>>> a051e8e31dea1f3ec8cd65e2484a1adcf4568961
 
 // Layouts
 import DashboardLayout from "../layouts/DashboardLayout";
 import AuthLayout from "../layouts/AuthLayout";
 import AdminLayout from "../layouts/AdminLayout";
-<<<<<<< HEAD
 
 // Project Lifecycle Components & Layout
 import PMOTestLayout from "../pages/projectLifecycle/PMOTestLayout";
@@ -17,10 +13,6 @@ import CreateProject from "../pages/projectLifecycle/CreateProject";
 import Flow from "../pages/projectLifecycle/Flow";
 import Milestones from "../pages/projectLifecycle/Milestones";
 import Phases from "../pages/projectLifecycle/Phases";
-=======
-// Pages
-import UserList from "../pages/userManagement/UserList";
->>>>>>> a051e8e31dea1f3ec8cd65e2484a1adcf4568961
 import ProjectDashboard from "../pages/projectLifecycle/ProjectDashboard";
 import ProjectDetails from "../pages/projectLifecycle/ProjectDetails";
 import ProjectNavbar from "../pages/projectLifecycle/ProjectNavbar";
@@ -55,11 +47,8 @@ import ReportsPage from "../pages/reports/ReportsPage";
 import AIProjectPage from "../pages/aiProject/AIProjectPage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import AdminPage from "../pages/systemAdmin/AdminPage";
-<<<<<<< HEAD
-=======
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import UnauthorizedPage from "../pages/auth/UnauthorizedPage";
->>>>>>> a051e8e31dea1f3ec8cd65e2484a1adcf4568961
 import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import AddUser from "../pages/userManagement/AddUser";
@@ -71,12 +60,13 @@ import ProtectedRoute from "../pages/auth/ProtectedRoute";
 
 export default function AppRoutes() {
   return (
-<<<<<<< HEAD
     <Routes>
       {/* Auth Layout Routes */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forget" element={<ForgotPasswordPage />} />
+        <Route path="/forbid" element={<UnauthorizedPage />} />
       </Route>
 
       {/* Project Lifecycle Layout Routes */}
@@ -94,9 +84,27 @@ export default function AppRoutes() {
       </Route>
 
       {/* Main Dashboard Layout Routes */}
-      <Route element={<DashboardLayout />}>
+      <Route
+        element={
+          <ProtectedRoute
+            allowedRoles={[
+              "PMO ADMIN",
+              "PROJECT_MANAGER",
+              "TEAM_MEMBER",
+              "INTERN"
+            ]}
+          >
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/" element={<ProjectDashboard />} />
         <Route path="/users" element={<UserList />} />
+        <Route path="/addusers" element={<AddUser />} />
+        <Route path="/editUsers/:id" element={<EditUser />} />
+        <Route path="/detailUsers/:id" element={<UserDetails />} />
+        <Route path="/Usersprofile" element={<UserProfile />} />
+        <Route path="/AssignRole/:id" element={<AssignRole />} />
         <Route path="/tasks" element={<TaskBoard />} />
         <Route path="/resources" element={<ResourcePage />} />
         <Route path="/risks" element={<RiskPage />} />
@@ -125,64 +133,16 @@ export default function AppRoutes() {
       </Route>
 
       {/* Admin Layout Routes */}
-      <Route element={<AdminLayout />}>
+      <Route
+        element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/adminpage" element={<ProjectDashboard />} />
       </Route>
     </Routes>
-=======
-    <div className="min-h-screen bg-gray-50">
-      <Routes>
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forget" element={<ForgotPasswordPage />} />
-          <Route path="/forbid" element={<UnauthorizedPage />} />
-        </Route>
-
-       <Route
- element={
-   <ProtectedRoute
-     allowedRoles={[
-       "PMO ADMIN",
-       "PROJECT_MANAGER",
-       "TEAM_MEMBER",
-       "INTERN"
-     ]}
-   >
-     <DashboardLayout />
-   </ProtectedRoute>
- }
->
-          <Route path="/" element={<ProjectDashboard />} />
-          <Route path="/users" element={<UserList />} />
-          <Route path="/addusers" element={<AddUser />} />
-          <Route path="/editUsers/:id" element={<EditUser />} />
-          <Route path="/detailUsers/:id" element={<UserDetails />} />
-          <Route path="/Usersprofile" element={<UserProfile />} />
-          <Route path="/AssignRole/:id" element={<AssignRole />} />
-          <Route path="/tasks" element={<TaskBoard />} />
-          <Route path="/resources" element={<ResourcePage />} />
-          <Route path="/risks" element={<RiskPage />} />
-          <Route path="/changes" element={<ChangeRequestPage />} />
-          <Route path="/budget" element={<BudgetPage />} />
-          <Route path="/collaboration" element={<CollaborationPage />} />
-          <Route path="/meetings" element={<MeetingPage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/ai" element={<AIProjectPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-        </Route>
-
-        <Route
-          element={
-            <ProtectedRoute>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="/adminpage" element={<ProjectDashboard />} />
-        </Route>
-      </Routes>
-    </div>
->>>>>>> a051e8e31dea1f3ec8cd65e2484a1adcf4568961
   );
 }

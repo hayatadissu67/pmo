@@ -1,14 +1,10 @@
 import React, { createContext, useContext, useState } from "react";
-<<<<<<< HEAD
-import { AuthService } from "../service/AuthService"
-=======
-import  AuthService  from "../service/AuthService"
->>>>>>> a051e8e31dea1f3ec8cd65e2484a1adcf4568961
+import AuthService from "../service/AuthService";
+
 const AppContext = createContext();
 
-
 export const AppProvider = ({ children }) => {
-   const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   const login = async (credentials) => {
     const data = await AuthService.login(credentials);
@@ -31,8 +27,6 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-
 export const useAppContext = () => {
   return useContext(AppContext);
 };
-
