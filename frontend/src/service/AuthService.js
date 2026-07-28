@@ -1,28 +1,41 @@
-// AuthService.js
-export const AuthService = {
-  async login(credentials) {
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(credentials),
-    });
+// Mock users (temporary until backend is available)
 
-    if (!response.ok) {
-      throw new Error("Login failed");
-    }
-    return response.json();
+const users = [
+  {
+    id: 1,
+    name: "System Administrator",
+    email: "admin@pmo.com",
+    password: "123",
+    role: "PMO ADMIN",
   },
-
-  async register(userData) {
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Registration failed");
-    }
-    return response.json();
+  {
+    id: 2,
+    name: "Project Manager",
+    email: "pm@pmo.com",
+    password: "Pm123",
+    role: "Project Manager",
   },
+  {
+    id: 3,
+    name: "Team Member",
+    email: "team@pmo.com",
+    password: "Team123",
+    role: "Team Member",
+  },
+];
+
+const login = async (email, password) => {
+  const user = users.find((u) => u.email === email && u.password === password);
+
+  if (!user) {
+    throw new Error("Invalid email or password");
+  }
+
+  return user;
 };
+
+const AuthService = {
+  login,
+};
+
+export default AuthService;
