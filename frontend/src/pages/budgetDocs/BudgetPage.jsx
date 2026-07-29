@@ -1,15 +1,7 @@
-import React, { useState } from 'react'
+import React from "react";
 
-export default function BudgetPage() {
-  const {budgetName, setBugdetName}=useState("")
-  const addBuget=()=>{
-
-  }
+export default function BudgetDocs() {
   return (
-    <div>
-    
-      <h1 className='bg-blue-500 text-red-200 text-2xl'>Bugdet page</h1>
-      <h2 className=''>Well come to Buget page</h2>
-    </div>
-  )
+    <div>BudgetPage</div>
+  );
 }
