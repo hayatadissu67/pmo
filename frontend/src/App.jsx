@@ -1,5 +1,10 @@
-import AppRouter from "./routes/AppRouter";
+import React from 'react';
+import AppRouter from './routes/AppRouter';
 
 export default function App() {
-  return <AppRouter />;
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <AppRouter />
+    </div>
+  );
 }

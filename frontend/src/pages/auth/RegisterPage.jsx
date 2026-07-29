@@ -9,7 +9,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-const { register } = useAuth();
+const { register } = useAppContext();
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ name, email, password, confirmPassword, agreeTerms });
