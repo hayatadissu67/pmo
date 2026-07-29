@@ -3,12 +3,6 @@ import React from 'react';
 export default function Overview() {
   return (
     <div className="space-y-6">
-      {/* 1. Budget Overview */}
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-800 mb-2">Budget Overview</h3>
-        <p className="text-sm text-gray-500">High-level summary of financial health, allocations, and key updates.</p>
-      </div>
-
       {/* 2. Budget Statistics & Financial Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">

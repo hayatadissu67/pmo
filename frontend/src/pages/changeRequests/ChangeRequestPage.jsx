@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 
-export default function ChangeRequestPage() {
+export default function ChangeRequests() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewingRequest, setViewingRequest] = useState(null);
   const [editingRequest, setEditingRequest] = useState(null);
   
-  // New request form state
   const [newTitle, setNewTitle] = useState('');
   const [newProject, setNewProject] = useState('PMO Control Tower');
   const [newCategory, setNewCategory] = useState('Infrastructure');
@@ -18,7 +17,7 @@ export default function ChangeRequestPage() {
     {
       id: 101,
       title: "Infrastructure Scale-up",
-      projectName: "PMO Control Tower",
+      project: "PMO Control Tower",
       category: "Infrastructure",
       date: "2026-07-27",
       requestType: "Budget Increase",
@@ -29,7 +28,7 @@ export default function ChangeRequestPage() {
     {
       id: 102,
       title: "Design Software License",
-      projectName: "Creative Hub",
+      project: "Creative Hub",
       category: "Design",
       date: "2026-07-25",
       requestType: "Reallocation",
@@ -40,7 +39,7 @@ export default function ChangeRequestPage() {
     {
       id: 103,
       title: "Security Audit & Penetration Testing",
-      projectName: "FinTech Gateway",
+      project: "FinTech Gateway",
       category: "Security",
       date: "2026-07-22",
       requestType: "Compliance",
@@ -51,7 +50,7 @@ export default function ChangeRequestPage() {
     {
       id: 104,
       title: "API Rate Limiting Implementation",
-      projectName: "Logistics Core",
+      project: "Logistics Core",
       category: "Backend",
       date: "2026-07-20",
       requestType: "Performance",
@@ -61,11 +60,14 @@ export default function ChangeRequestPage() {
     }
   ]);
 
-  const filteredRequests = requests.filter(req => 
-    req.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    req.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (req.category && req.category.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredRequests = requests.filter(req => {
+    const query = searchTerm.toLowerCase();
+    return (
+      (req.title && req.title.toLowerCase().includes(query)) ||
+      (req.project && req.project.toLowerCase().includes(query)) ||
+      (req.category && req.category.toLowerCase().includes(query))
+    );
+  });
 
   const onView = (req) => {
     setViewingRequest(req);
@@ -89,7 +91,7 @@ export default function ChangeRequestPage() {
     const newItem = {
       id: Date.now().toString().slice(-3),
       title: newTitle,
-      projectName: newProject,
+      project: newProject,
       category: newCategory,
       date: new Date().toISOString().split('T')[0],
       requestType: newType,
@@ -162,27 +164,13 @@ export default function ChangeRequestPage() {
               {filteredRequests.length > 0 ? (
                 filteredRequests.map((req) => (
                   <tr key={req.id} className="hover:bg-gray-50 text-sm transition-colors">
-                    <td className="py-4 px-4 font-medium text-gray-900">
-                      #{req.id}
-                    </td>
-                    <td className="py-4 px-4 font-semibold text-gray-800">
-                      {req.title}
-                    </td>
-                    <td className="py-4 px-4 text-gray-600">
-                      {req.projectName}
-                    </td>
-                    <td className="py-4 px-4 text-gray-600">
-                      {req.category || 'N/A'}
-                    </td>
-                    <td className="py-4 px-4 text-gray-600">
-                      {req.date}
-                    </td>
-                    <td className="py-4 px-4 text-gray-600">
-                      {req.requestType}
-                    </td>
-                    <td className="py-4 px-4 font-bold text-gray-900">
-                      ${Number(req.requestedAmount).toLocaleString()}
-                    </td>
+                    <td className="py-4 px-4 font-medium text-gray-900">#{req.id}</td>
+                    <td className="py-4 px-4 font-semibold text-gray-800">{req.title}</td>
+                    <td className="py-4 px-4 text-gray-600">{req.project}</td>
+                    <td className="py-4 px-4 text-gray-600">{req.category || 'N/A'}</td>
+                    <td className="py-4 px-4 text-gray-600">{req.date}</td>
+                    <td className="py-4 px-4 text-gray-600">{req.requestType}</td>
+                    <td className="py-4 px-4 font-bold text-gray-900">${Number(req.requestedAmount).toLocaleString()}</td>
                     <td className="py-4 px-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                         req.priority === 'High' ? 'bg-red-100 text-red-700' :
@@ -203,24 +191,9 @@ export default function ChangeRequestPage() {
                       </span>
                     </td>
                     <td className="py-4 px-4 text-right space-x-2">
-                      <button 
-                        onClick={() => onView(req)} 
-                        className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
-                      >
-                        View
-                      </button>
-                      <button 
-                        onClick={() => onEdit(req)} 
-                        className="text-amber-600 hover:text-amber-800 font-medium cursor-pointer"
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        onClick={() => onDelete(req.id)} 
-                        className="text-red-600 hover:text-red-800 font-medium cursor-pointer"
-                      >
-                        Delete
-                      </button>
+                      <button onClick={() => onView(req)} className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer">View</button>
+                      <button onClick={() => onEdit(req)} className="text-amber-600 hover:text-amber-800 font-medium cursor-pointer">Edit</button>
+                      <button onClick={() => onDelete(req.id)} className="text-red-600 hover:text-red-800 font-medium cursor-pointer">Delete</button>
                     </td>
                   </tr>
                 ))
@@ -242,12 +215,7 @@ export default function ChangeRequestPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
               <h3 className="text-lg font-bold text-gray-900">Create New Change Request</h3>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-gray-600 font-bold text-lg cursor-pointer"
-              >
-                &times;
-              </button>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold text-lg cursor-pointer">&times;</button>
             </div>
             
             <form onSubmit={handleAddSubmit} className="space-y-4">
@@ -322,19 +290,8 @@ export default function ChangeRequestPage() {
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t">
-                <button 
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border rounded-xl text-sm text-gray-600 hover:bg-gray-50 font-medium cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium shadow-sm cursor-pointer"
-                >
-                  Save Request
-                </button>
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 border rounded-xl text-sm text-gray-600 hover:bg-gray-50 font-medium cursor-pointer">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium shadow-sm cursor-pointer">Save Request</button>
               </div>
             </form>
           </div>
@@ -347,12 +304,7 @@ export default function ChangeRequestPage() {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
               <h3 className="text-lg font-bold text-gray-900">Change Request Details</h3>
-              <button 
-                onClick={() => setViewingRequest(null)}
-                className="text-gray-400 hover:text-gray-600 font-bold text-lg cursor-pointer"
-              >
-                &times;
-              </button>
+              <button onClick={() => setViewingRequest(null)} className="text-gray-400 hover:text-gray-600 font-bold text-lg cursor-pointer">&times;</button>
             </div>
 
             <div className="space-y-3 text-sm">
@@ -367,7 +319,7 @@ export default function ChangeRequestPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <span className="text-xs font-semibold text-gray-400 uppercase">Project</span>
-                  <p className="text-gray-700">{viewingRequest.projectName}</p>
+                  <p className="text-gray-700">{viewingRequest.project}</p>
                 </div>
                 <div>
                   <span className="text-xs font-semibold text-gray-400 uppercase">Category</span>
@@ -401,12 +353,7 @@ export default function ChangeRequestPage() {
             </div>
 
             <div className="flex justify-end pt-4 border-t">
-              <button 
-                onClick={() => setViewingRequest(null)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium cursor-pointer"
-              >
-                Close
-              </button>
+              <button onClick={() => setViewingRequest(null)} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium cursor-pointer">Close</button>
             </div>
           </div>
         </div>
@@ -418,12 +365,7 @@ export default function ChangeRequestPage() {
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4">
             <div className="flex justify-between items-center border-b pb-3">
               <h3 className="text-lg font-bold text-gray-900">Edit Change Request</h3>
-              <button 
-                onClick={() => setEditingRequest(null)}
-                className="text-gray-400 hover:text-gray-600 font-bold text-lg cursor-pointer"
-              >
-                &times;
-              </button>
+              <button onClick={() => setEditingRequest(null)} className="text-gray-400 hover:text-gray-600 font-bold text-lg cursor-pointer">&times;</button>
             </div>
             
             <form onSubmit={handleEditSubmit} className="space-y-4">
@@ -443,8 +385,8 @@ export default function ChangeRequestPage() {
                   <label className="block text-xs font-semibold text-gray-600 uppercase mb-1">Project</label>
                   <input 
                     type="text"
-                    value={editingRequest.projectName}
-                    onChange={(e) => setEditingRequest({...editingRequest, projectName: e.target.value})}
+                    value={editingRequest.project}
+                    onChange={(e) => setEditingRequest({...editingRequest, project: e.target.value})}
                     className="w-full px-3 py-2 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
@@ -488,19 +430,8 @@ export default function ChangeRequestPage() {
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t">
-                <button 
-                  type="button"
-                  onClick={() => setEditingRequest(null)}
-                  className="px-4 py-2 border rounded-xl text-sm text-gray-600 hover:bg-gray-50 font-medium cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium shadow-sm cursor-pointer"
-                >
-                  Update Changes
-                </button>
+                <button type="button" onClick={() => setEditingRequest(null)} className="px-4 py-2 border rounded-xl text-sm text-gray-600 hover:bg-gray-50 font-medium cursor-pointer">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-medium shadow-sm cursor-pointer">Update Changes</button>
               </div>
             </form>
           </div>
