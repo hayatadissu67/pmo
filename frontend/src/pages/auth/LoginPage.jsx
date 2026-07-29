@@ -3,9 +3,6 @@ import InputField from "../../components/forms/InputField";
 import Checkbox from "../../components/forms/Checkbox";
 import Button from "../../components/buttons/Button";
 import { useAppContext } from "../../context/AppContext";
-import { useNavigate } from "react-router-dom";
-import {useAuth}  from "../../context/AuthContext";
-import AuthService from "../../service/AuthService";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
