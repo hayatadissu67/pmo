@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState } from "react";
-import { AuthService } from "../service/AuthService";
+import AuthService from "../service/AuthService";
+
 const AppContext = createContext();
 
-
 export const AppProvider = ({ children }) => {
-   const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   const login = async (credentials) => {
     const data = await AuthService.login(credentials);
@@ -27,8 +27,6 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-
 export const useAppContext = () => {
   return useContext(AppContext);
 };
-

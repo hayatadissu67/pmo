@@ -11,5 +11,5 @@ export default function ProjectDashboard() {
       </div>
 
     </div>
-  );
+  )
 }

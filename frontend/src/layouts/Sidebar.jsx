@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { MdDashboard } from "react-icons/md";
+import { FaTasks } from "react-icons/fa";
 
 export default function Sidebar() {
   return (
@@ -7,9 +9,9 @@ export default function Sidebar() {
         Project Manager
       </div>
       <nav className="flex-1 p-4 space-y-2">
-        <Link to="/users" className="block p-2 rounded hover:bg-blue-700">Users</Link>
-        <Link to="/tasks" className="block p-2 rounded hover:bg-blue-700">Tasks</Link>
-        <Link to="/resources" className="block p-2 rounded hover:bg-blue-700">Resources</Link>
+        <Link to="/users" className="block p-2 rounded hover:bg-blue-700 flex items-center gap-2"><MdDashboard/>Users</Link>
+        <Link to="/tasks" className="block p-2 rounded hover:bg-blue-700 flex items-center gap-2"><FaTasks/>Tasks</Link>
+        <Link to="/resources" className="block p-2 rounded hover:bg-blue-700 flex items-center gap-2">Resources</Link>
         <Link to="/risks" className="block p-2 rounded hover:bg-blue-700">Risks</Link>
         <Link to="/changes" className="block p-2 rounded hover:bg-blue-700">Change Requests</Link>
         <Link to="/budget" className="block p-2 rounded hover:bg-blue-700">Budget</Link>
@@ -19,6 +21,7 @@ export default function Sidebar() {
         <Link to="/ai" className="block p-2 rounded hover:bg-blue-700">AI Project</Link>
         <Link to="/notifications" className="block p-2 rounded hover:bg-blue-700">Notifications</Link>
         <Link to="/admin" className="block p-2 rounded hover:bg-blue-700">Admin</Link>
+        
       </nav>
     </aside>
   );
