@@ -160,15 +160,15 @@ export default function ReportsPage() {
                 <h2 className="text-lg font-bold text-gray-800">Document Templates</h2>
                 <p className="text-sm text-gray-500">Standardized report structures and forms.</p>
               </div>
-              <CreateTemplate />
+              {/* <CreateTemplate /> */}
             </div>
             <TemplateList onSelectTemplate={setSelectedTemplate} selectedId={selectedTemplate?.id} />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <PreviewTemplate template={selectedTemplate} />
-              <EditTemplate template={selectedTemplate} />
-              <DeleteTemplate template={selectedTemplate} />
+              {/* <PreviewTemplate template={selectedTemplate} /> */}
+              {/* <EditTemplate template={selectedTemplate} /> */}
+              {/* <DeleteTemplate template={selectedTemplate} /> */}
             </div>
-            <UseTemplate template={selectedTemplate} onGenerate={() => setActiveTab('generate')} />
+            {/* <UseTemplate template={selectedTemplate} onGenerate={() => setActiveTab('generate')} /> */}
           </div>
         )}
 

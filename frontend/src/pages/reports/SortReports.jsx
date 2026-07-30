@@ -1,14 +1,18 @@
 import React from 'react';
 
-export default function SortReports({ sort, setSort }) {
+export default function SortReports({ onSortChange }) {
   return (
-    <select 
-      value={sort} 
-      onChange={(e) => setSort(e.target.value)}
-      className="border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-    >
-      <option value="date">Sort by Date</option>
-      <option value="title">Sort by Title</option>
-    </select>
+    <div className="flex items-center space-x-2">
+      <span className="text-xs font-semibold text-gray-600">Sort By:</span>
+      <select
+        onChange={(e) => onSortChange && onSortChange(e.target.value)}
+        className="px-3 py-1 text-sm bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        <option value="date-desc">Date (Newest First)</option>
+        <option value="date-asc">Date (Oldest First)</option>
+        <option value="title-asc">Title (A-Z)</option>
+        <option value="title-desc">Title (Z-A)</option>
+      </select>
+    </div>
   );
 }

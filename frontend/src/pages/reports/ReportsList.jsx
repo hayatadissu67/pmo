@@ -1,58 +1,62 @@
 import React from 'react';
 
-export default function ReportsList({ query, filter, sort, onSelectReport }) {
-  const allReports = [
-    { id: 1, title: 'PMO Weekly Status - W28', project: 'Control Tower', status: 'Approved', date: '2026-07-25', author: 'John Doe' },
-    { id: 2, title: 'Risk & Issue Matrix', project: 'ERP Solution', status: 'Pending', date: '2026-07-24', author: 'Sarah Smith' },
-    { id: 3, title: 'Budget Allocation Report', project: 'Mobile Banking', status: 'Approved', date: '2026-07-20', author: 'Mike Johnson' },
-    { id: 4, title: 'Sprint 3 Retrospective', project: 'Control Tower', status: 'Draft', date: '2026-07-18', author: 'Alex Reed' },
-  ];
+const mockReports = [
+  { id: 'REP-001', name: 'Q2 Financial Summary', owner: 'Abebe Kebede', date: '2026-07-28', status: 'Approved' },
+  { id: 'REP-002', name: 'System Security Audit', owner: 'Chaltu Tadesse', date: '2026-07-25', status: 'Pending' },
+  { id: 'REP-003', name: 'Network Traffic Log', owner: 'Mulugeta Alemu', date: '2026-07-20', status: 'Draft' },
+];
 
-  const filtered = allReports
-    .filter(r => r.title.toLowerCase().includes(query.toLowerCase()) || r.project.toLowerCase().includes(query.toLowerCase()))
-    .filter(r => filter === 'ALL' || r.status.toUpperCase() === filter)
-    .sort((a, b) => sort === 'date' ? new Date(b.date) - new Date(a.date) : a.title.localeCompare(b.title));
-
+export default function ReportsList({ reports = mockReports, onView, onDelete }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-      <table className="w-full text-left text-sm">
-        <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold">
-          <tr>
-            <th className="p-3">Report Title</th>
-            <th className="p-3">Project</th>
-            <th className="p-3">Author</th>
-            <th className="p-3">Status</th>
-            <th className="p-3">Date</th>
-            <th className="p-3 text-right">Action</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {filtered.map((r) => (
-            <tr key={r.id} className="hover:bg-gray-50 transition-colors">
-              <td className="p-3 font-medium text-gray-800">{r.title}</td>
-              <td className="p-3 text-gray-600">{r.project}</td>
-              <td className="p-3 text-gray-600">{r.author}</td>
-              <td className="p-3">
-                <span className={`px-2.5 py-0.5 rounded text-xs font-medium ${
-                  r.status === 'Approved' ? 'bg-green-100 text-green-700' : 
-                  r.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'
-                }`}>
-                  {r.status}
-                </span>
-              </td>
-              <td className="p-3 text-gray-500">{r.date}</td>
-              <td className="p-3 text-right">
-                <button
-                  onClick={() => onSelectReport(r)}
-                  className="text-xs bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1 rounded font-medium transition-colors"
-                >
-                  View
-                </button>
-              </td>
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-bold text-gray-800 mb-4">All Reports List</h2>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="border-b bg-gray-50 text-xs font-semibold text-gray-500 uppercase">
+              <th className="p-3">Report ID</th>
+              <th className="p-3">Title</th>
+              <th className="p-3">Owner</th>
+              <th className="p-3">Date</th>
+              <th className="p-3">Status</th>
+              <th className="p-3 text-right">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y text-sm text-gray-700">
+            {reports.map((report) => (
+              <tr key={report.id} className="hover:bg-gray-50 transition">
+                <td className="p-3 font-mono text-xs text-gray-500">{report.id}</td>
+                <td className="p-3 font-semibold text-gray-800">{report.name}</td>
+                <td className="p-3">{report.owner}</td>
+                <td className="p-3 text-gray-500">{report.date}</td>
+                <td className="p-3">
+                  <span className={`px-2.5 py-1 text-xs rounded-full font-medium ${
+                    report.status === 'Approved' ? 'bg-green-100 text-green-700' :
+                    report.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' :
+                    'bg-gray-100 text-gray-600'
+                  }`}>
+                    {report.status}
+                  </span>
+                </td>
+                <td className="p-3 text-right space-x-2">
+                  <button
+                    onClick={() => onView && onView(report.id)}
+                    className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => onDelete && onDelete(report.id)}
+                    className="px-3 py-1 bg-red-50 text-red-600 text-xs rounded hover:bg-red-100 transition"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
