@@ -1,4 +1,8 @@
-// Mock data for the communication module
+// ============================================================
+// MOCK DATA – PMO Control Tower Communication Module
+// ============================================================
+
+// ===== USERS =====
 export const mockUsers = [
     { user_id: 1, full_name: 'System Admin', email: 'admin@pmo.com', role: 'Admin', avatar: '🛡️' },
     { user_id: 2, full_name: 'Sarah Executive', email: 'exec@pmo.com', role: 'Executive PM', avatar: '👔' },
@@ -8,6 +12,7 @@ export const mockUsers = [
     { user_id: 6, full_name: 'Alex Intern', email: 'intern@pmo.com', role: 'Intern', avatar: '🎓' },
 ];
 
+// ===== CHAT ROOMS =====
 export const mockRooms = [
     { room_id: 1, room_name: 'General Chat', room_type: 'public', created_by: 1, created_at: '2026-01-01T10:00:00' },
     { room_id: 2, room_name: 'Project Alpha', room_type: 'private', project_id: 1, created_by: 3, created_at: '2026-03-01T09:00:00' },
@@ -16,6 +21,25 @@ export const mockRooms = [
     { room_id: 5, room_name: 'Executive Updates', room_type: 'private', created_by: 2, created_at: '2026-04-01T08:00:00' },
 ];
 
+// ===== ROOM PARTICIPANTS (room_id -> array of user_ids) =====
+export const mockRoomParticipants = {
+    1: [1, 2, 3, 4, 5, 6], // General Chat – all users
+    2: [1, 2, 3, 4, 5],    // Project Alpha – Admin, Exec, PM, Dev, QA
+    3: [1, 2, 3, 4, 5],    // Project Beta – same
+    4: [3, 4],             // Direct: John ↔ David – only PM and Dev
+    5: [1, 2, 3],          // Executive Updates – Admin, Exec, PM
+};
+
+// ===== UNREAD COUNTS (room_id -> user_id -> count) =====
+export const mockUnread = {
+    1: { 2: 2, 3: 1, 4: 0, 5: 3, 6: 0 }, // General Chat: some unread
+    2: { 1: 0, 2: 0, 4: 1, 5: 0 },
+    3: { 1: 0, 2: 0, 4: 0, 5: 0 },
+    4: { 3: 0, 4: 0 },
+    5: { 1: 0, 2: 0, 3: 0 },
+};
+
+// ===== MESSAGES =====
 export const mockMessages = {
     1: [
         { message_id: 1, room_id: 1, sender_id: 1, content: 'Welcome to the PMO Control Tower! 🚀', created_at: '2026-01-01T10:05:00' },
@@ -45,6 +69,7 @@ export const mockMessages = {
     ],
 };
 
+// ===== MEETINGS =====
 export const mockMeetings = [
     { 
         meeting_id: 1, 
@@ -88,8 +113,23 @@ export const mockMeetings = [
         attendee_count: 5,
         attendees: [3, 4, 5]
     },
+    { 
+        meeting_id: 4, 
+        title: 'Executive Board Review', 
+        description: 'Quarterly board review presentation',
+        organizer_id: 2, 
+        organizer_name: 'Sarah Executive',
+        start_time: '2026-07-25T11:00:00', 
+        end_time: '2026-07-25T12:30:00',
+        project_id: null,
+        project_name: null,
+        status: 'scheduled',
+        attendee_count: 10,
+        attendees: [1, 2, 3]
+    },
 ];
 
+// ===== NOTIFICATIONS =====
 export const mockNotifications = [
     { 
         notification_id: 1, 
@@ -124,8 +164,20 @@ export const mockNotifications = [
         is_read: true,
         created_at: '2026-07-20T10:00:00'
     },
+    { 
+        notification_id: 4, 
+        user_id: 4, 
+        type: 'comment', 
+        title: 'New comment',
+        content: 'Maria QA commented on your task: API Testing',
+        reference_id: 2,
+        reference_type: 'task',
+        is_read: false,
+        created_at: '2026-07-19T14:20:00'
+    },
 ];
 
+// ===== DISCUSSIONS =====
 export const mockDiscussions = [
     {
         discussion_id: 1,
@@ -134,6 +186,8 @@ export const mockDiscussions = [
         created_by_name: 'John Developer',
         project_id: 1,
         project_name: 'Project Alpha',
+        task_id: null,
+        task_name: null,
         created_at: '2026-07-20T11:00:00',
         comments: [
             { comment_id: 1, user_id: 4, user_name: 'John Developer', content: 'I\'ve completed the API design draft. Please review.', created_at: '2026-07-20T11:05:00' },
@@ -141,8 +195,24 @@ export const mockDiscussions = [
             { comment_id: 3, user_id: 3, user_name: 'David PM', content: 'Can we add pagination to the list endpoint?', created_at: '2026-07-20T12:00:00' },
         ]
     },
+    {
+        discussion_id: 2,
+        title: 'UI/UX Design Feedback',
+        created_by: 4,
+        created_by_name: 'John Developer',
+        project_id: 1,
+        project_name: 'Project Alpha',
+        task_id: 1,
+        task_name: 'UI Design',
+        created_at: '2026-07-19T16:00:00',
+        comments: [
+            { comment_id: 4, user_id: 4, user_name: 'John Developer', content: 'Here\'s the latest UI mockup for the dashboard.', created_at: '2026-07-19T16:05:00' },
+            { comment_id: 5, user_id: 1, user_name: 'System Admin', content: 'Love the design! Clean and intuitive.', created_at: '2026-07-19T17:00:00' },
+        ]
+    },
 ];
-// Add to the end of the file
+
+// ===== FILES =====
 export const mockFiles = [
     {
         file_id: 1,
@@ -151,9 +221,10 @@ export const mockFiles = [
         type: 'pdf',
         uploaded_by: 3,
         uploaded_by_name: 'David PM',
-        room_id: 2, // Project Alpha room
+        room_id: 2,
         uploaded_at: '2026-07-20T14:30:00',
-        url: '/files/project_alpha_report.pdf'
+        url: '/files/project_alpha_report.pdf',
+        content: 'This is a sample PDF content for Project Alpha report.'
     },
     {
         file_id: 2,
@@ -164,7 +235,8 @@ export const mockFiles = [
         uploaded_by_name: 'John Developer',
         room_id: 2,
         uploaded_at: '2026-07-21T10:15:00',
-        url: '/files/ui_mockup_v2.png'
+        url: '/files/ui_mockup_v2.png',
+        content: null
     },
     {
         file_id: 3,
@@ -173,8 +245,33 @@ export const mockFiles = [
         type: 'excel',
         uploaded_by: 2,
         uploaded_by_name: 'Sarah Executive',
-        room_id: 5, // Executive Updates room
+        room_id: 5,
         uploaded_at: '2026-07-19T09:00:00',
-        url: '/files/q4_budget.xlsx'
+        url: '/files/q4_budget.xlsx',
+        content: null
+    },
+    {
+        file_id: 4,
+        name: 'Meeting_Notes.docx',
+        size: '1.2 MB',
+        type: 'word',
+        uploaded_by: 3,
+        uploaded_by_name: 'David PM',
+        room_id: 1,
+        uploaded_at: '2026-07-22T11:00:00',
+        url: '/files/meeting_notes.docx',
+        content: 'Meeting notes from Project Alpha sprint review.'
+    },
+    {
+        file_id: 5,
+        name: 'Presentation_Q4.pptx',
+        size: '3.1 MB',
+        type: 'ppt',
+        uploaded_by: 2,
+        uploaded_by_name: 'Sarah Executive',
+        room_id: 5,
+        uploaded_at: '2026-07-18T15:00:00',
+        url: '/files/presentation_q4.pptx',
+        content: 'Q4 board presentation'
     },
 ];

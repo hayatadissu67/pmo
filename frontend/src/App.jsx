@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
@@ -63,38 +63,173 @@ function Login() {
     );
 }
 
-// --- PROTECTED LAYOUT (with Top Bar INSIDE main-content) ---
+// --- PROTECTED LAYOUT (with Top Bar and Clickable Icons) ---
 function ProtectedLayout({ children }) {
     const { user, logout } = useAuth();
     const { isDark, toggleTheme } = useTheme();
+    const [showNotifications, setShowNotifications] = useState(false);
+    const [showChatSidebar, setShowChatSidebar] = useState(false);
+
+    // Close dropdowns when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (showNotifications && !e.target.closest('.notification-dropdown') && !e.target.closest('.icon-btn')) {
+                setShowNotifications(false);
+            }
+            if (showChatSidebar && !e.target.closest('.chat-sidebar-overlay') && !e.target.closest('.icon-btn')) {
+                setShowChatSidebar(false);
+            }
+        };
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [showNotifications, showChatSidebar]);
 
     return (
         <div className={`app-layout ${isDark ? 'dark' : ''}`}>
             <Sidebar />
             <div className="main-content">
-                {/* ===== TOP BAR - NOW INSIDE main-content ===== */}
+                {/* ===== TOP BAR ===== */}
                 <div className="topbar">
                     <div className="topbar-left">
                         PMO <span>Control Tower</span>
                     </div>
                     <div className="topbar-right">
-                        {/* THEME TOGGLE BUTTON */}
+                        {/* THEME TOGGLE */}
                         <button className="icon-btn" onClick={toggleTheme} title="Toggle Theme">
                             <i className={`fas ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
                         </button>
-                        <button className="icon-btn">
+
+                        {/* NOTIFICATIONS - CLICKABLE */}
+                        <button 
+                            className="icon-btn" 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowNotifications(!showNotifications);
+                                setShowChatSidebar(false);
+                            }}
+                            title="Notifications"
+                        >
                             <i className="fas fa-bell"></i>
                             <span className="count">3</span>
                         </button>
-                        <button className="icon-btn">
+
+                        {/* CHAT - CLICKABLE */}
+                        <button 
+                            className="icon-btn" 
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowChatSidebar(!showChatSidebar);
+                                setShowNotifications(false);
+                            }}
+                            title="Chat"
+                        >
                             <i className="fas fa-comment-dots"></i>
                             <span className="count">5</span>
                         </button>
+
+                        {/* AVATAR - LOGOUT */}
                         <div className="avatar" onClick={logout} title="Logout">
                             {user?.full_name?.[0] || 'U'}
                         </div>
                     </div>
                 </div>
+
+                {/* ===== NOTIFICATION DROPDOWN ===== */}
+                {showNotifications && (
+                    <div className="notification-dropdown" onClick={(e) => e.stopPropagation()}>
+                        <div className="dropdown-header">
+                            <h4>🔔 Notifications</h4>
+                            <button onClick={() => setShowNotifications(false)}>✕</button>
+                        </div>
+                        <div className="dropdown-list">
+                            <div className="notif-item">
+                                <div className="notif-icon">🔔</div>
+                                <div className="notif-content">
+                                    <div className="notif-title">You were mentioned</div>
+                                    <div className="notif-text">@John Developer mentioned you in chat</div>
+                                    <div className="notif-time">2 min ago</div>
+                                </div>
+                            </div>
+                            <div className="notif-item">
+                                <div className="notif-icon">📅</div>
+                                <div className="notif-content">
+                                    <div className="notif-title">Meeting reminder</div>
+                                    <div className="notif-text">Project Alpha Sprint Review at 10:00 AM</div>
+                                    <div className="notif-time">15 min ago</div>
+                                </div>
+                            </div>
+                            <div className="notif-item">
+                                <div className="notif-icon">✅</div>
+                                <div className="notif-content">
+                                    <div className="notif-title">Task assigned</div>
+                                    <div className="notif-text">You were assigned: UI Design</div>
+                                    <div className="notif-time">1 hour ago</div>
+                                </div>
+                            </div>
+                            <div className="notif-item">
+                                <div className="notif-icon">💬</div>
+                                <div className="notif-content">
+                                    <div className="notif-title">New message</div>
+                                    <div className="notif-text">Maria: Can you review the test results?</div>
+                                    <div className="notif-time">2 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="dropdown-footer">
+                            <button className="btn-view-all">View All Notifications</button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ===== CHAT SIDEBAR DROPDOWN ===== */}
+                {showChatSidebar && (
+                    <div className="chat-sidebar-overlay" onClick={(e) => e.stopPropagation()}>
+                        <div className="chat-sidebar-dropdown">
+                            <div className="dropdown-header">
+                                <h4>💬 Recent Chats</h4>
+                                <button onClick={() => setShowChatSidebar(false)}>✕</button>
+                            </div>
+                            <div className="dropdown-list">
+                                <div className="chat-item">
+                                    <div className="chat-avatar">📋</div>
+                                    <div className="chat-info">
+                                        <div className="chat-name">Project Alpha</div>
+                                        <div className="chat-preview">David: I'll update the report</div>
+                                        <div className="chat-time">10:45 AM</div>
+                                    </div>
+                                </div>
+                                <div className="chat-item">
+                                    <div className="chat-avatar">🌐</div>
+                                    <div className="chat-info">
+                                        <div className="chat-name">General Chat</div>
+                                        <div className="chat-preview">Maria: Ready for testing</div>
+                                        <div className="chat-time">10:30 AM</div>
+                                    </div>
+                                </div>
+                                <div className="chat-item">
+                                    <div className="chat-avatar">💻</div>
+                                    <div className="chat-info">
+                                        <div className="chat-name">John Developer</div>
+                                        <div className="chat-preview">Can you review the code?</div>
+                                        <div className="chat-time">9:15 AM</div>
+                                    </div>
+                                </div>
+                                <div className="chat-item">
+                                    <div className="chat-avatar">🧪</div>
+                                    <div className="chat-info">
+                                        <div className="chat-name">Maria QA</div>
+                                        <div className="chat-preview">Tests are passing ✅</div>
+                                        <div className="chat-time">8:45 AM</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="dropdown-footer">
+                                <button className="btn-view-all">View All Chats</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* ===== PAGE CONTENT ===== */}
                 {children}
             </div>
