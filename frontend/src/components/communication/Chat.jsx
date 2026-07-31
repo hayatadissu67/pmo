@@ -5,7 +5,8 @@ import {
     mockMessages, 
     mockUsers, 
     mockRoomParticipants, 
-    mockUnread 
+    mockUnread,
+    saveMockData 
 } from '../../data/mockData';
 import './Chat.css';
 
@@ -15,60 +16,26 @@ function Chat() {
     const [currentRoom, setCurrentRoom] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [isSending, setIsSending] = useState(false); // <-- NEW: prevent double submit
     const messagesEndRef = useRef(null);
 
-    // ===== DEBUG: Log user and data =====
-    console.log('🔍 Current user:', user);
-    console.log('🔍 All mockRooms:', mockRooms);
-    console.log('🔍 All mockRoomParticipants:', mockRoomParticipants);
-
-    // ===== GET UNREAD COUNT FOR CURRENT USER =====
-    const getUnreadForRoom = (roomId) => {
+    // ===== UNREAD COUNT =====
+    const getUnreadCount = (roomId) => {
+        if (!user) return 0;
         const roomUnread = mockUnread[roomId] || {};
-        return roomUnread[user?.user_id] || 0;
+        return roomUnread[user.user_id] || 0;
     };
 
     // ===== LOAD ROOMS =====
     useEffect(() => {
         if (!user) return;
-
-        // Filter rooms based on user's role and participants
-        const userRooms = mockRooms.filter(room => {
-            // Public rooms are visible to everyone
-            if (room.room_type === 'public') return true;
-
-            // Direct chats: show if user's name is in the room name
-            if (room.room_type === 'direct') {
-                return room.room_name.includes(user.full_name) || 
-                       room.room_name.includes('John') || 
-                       room.room_name.includes('David');
-            }
-
-            // Private rooms: check if user is in the participants list
-            const participants = mockRoomParticipants[room.room_id] || [];
-            return participants.includes(user.user_id);
-        });
-
-        console.log('🔍 Filtered rooms:', userRooms);
-
-        // If no rooms found, fallback to all rooms (temporary fix)
-        if (userRooms.length === 0) {
-            console.warn('⚠️ No rooms found! Falling back to all rooms.');
-            setRooms(mockRooms);
-            if (mockRooms.length > 0) {
-                setCurrentRoom(mockRooms[0]);
-                const roomMessages = mockMessages[mockRooms[0].room_id] || [];
-                setMessages(roomMessages);
-                markAsRead(mockRooms[0].room_id);
-            }
-        } else {
-            setRooms(userRooms);
-            if (userRooms.length > 0) {
-                setCurrentRoom(userRooms[0]);
-                const roomMessages = mockMessages[userRooms[0].room_id] || [];
-                setMessages(roomMessages);
-                markAsRead(userRooms[0].room_id);
-            }
+        setRooms(mockRooms);
+        if (mockRooms && mockRooms.length > 0) {
+            const firstRoom = mockRooms[0];
+            setCurrentRoom(firstRoom);
+            const roomMessages = mockMessages[firstRoom.room_id] || [];
+            setMessages(roomMessages);
+            markAsRead(firstRoom.room_id);
         }
     }, [user]);
 
@@ -82,9 +49,8 @@ function Chat() {
         if (!roomId || !user) return;
         if (mockUnread[roomId]) {
             mockUnread[roomId][user.user_id] = 0;
+            saveMockData();
         }
-        // Refresh room list to update unread badges
-        setRooms([...rooms]);
     };
 
     // ===== ROOM SELECT =====
@@ -95,10 +61,15 @@ function Chat() {
         markAsRead(room.room_id);
     };
 
-    // ===== SEND MESSAGE =====
+    // ===== SEND MESSAGE (with duplicate prevention) =====
     const handleSendMessage = (e) => {
         e.preventDefault();
-        if (!newMessage.trim() || !currentRoom || !user) return;
+        console.log('handleSendMessage called');
+        
+        // ✅ Prevent double submission
+        if (isSending || !newMessage.trim() || !currentRoom || !user) return;
+        
+        setIsSending(true); // Disable the button
 
         // Create new message
         const newMsg = {
@@ -129,23 +100,25 @@ function Chat() {
             }
         });
 
+        // Persist to localStorage
+        saveMockData();
+
         // Update local state
         setMessages(prev => [...prev, newMsg]);
         setNewMessage('');
-        // Refresh room list to update unread counts
-        setRooms([...rooms]);
+        setIsSending(false); // Re-enable the button
 
-        // Simulate auto-reply (for demo)
+        // Simulate auto-reply (optional – keep it or remove it)
         setTimeout(() => {
             const replyMsg = {
                 message_id: Date.now() + 1,
                 room_id: currentRoom.room_id,
-                sender_id: 2, // Sarah Executive (auto-reply)
+                sender_id: 2,
                 content: "Thanks for your message! I'll get back to you shortly. 🤖",
                 created_at: new Date().toISOString(),
             };
             mockMessages[currentRoom.room_id].push(replyMsg);
-            // Mark as unread for current user (since it's from someone else)
+            
             if (!mockUnread[currentRoom.room_id]) {
                 mockUnread[currentRoom.room_id] = {};
             }
@@ -153,8 +126,9 @@ function Chat() {
                 mockUnread[currentRoom.room_id][user.user_id] = 0;
             }
             mockUnread[currentRoom.room_id][user.user_id] += 1;
+
+            saveMockData();
             setMessages(prev => [...prev, replyMsg]);
-            setRooms([...rooms]);
         }, 1500);
     };
 
@@ -192,43 +166,8 @@ function Chat() {
         return (mockMessages[roomId] || []).length;
     };
 
-    const getUnreadCount = (roomId) => {
-        if (!user) return 0;
-        const roomUnread = mockUnread[roomId] || {};
-        return roomUnread[user.user_id] || 0;
-    };
-
-    // ===== DEBUG: Temporary button to show debug info =====
-    const debugInfo = () => {
-        console.log('🔍 Current user:', user);
-        console.log('🔍 All rooms:', mockRooms);
-        console.log('🔍 Participants:', mockRoomParticipants);
-        console.log('🔍 Filtered rooms:', rooms);
-        alert('Check console for debug info!');
-    };
-
     return (
         <div className="chat-container">
-            {/* DEBUG BUTTON (remove later) */}
-            <button 
-                onClick={debugInfo}
-                style={{ 
-                    position: 'fixed', 
-                    bottom: '10px', 
-                    right: '10px', 
-                    zIndex: 9999, 
-                    padding: '6px 12px', 
-                    background: '#e53e3e', 
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    cursor: 'pointer'
-                }}
-            >
-                🐛 Debug
-            </button>
-
             {/* ===== ROOM LIST ===== */}
             <div className="room-list">
                 <div className="room-list-header">
@@ -236,9 +175,7 @@ function Chat() {
                 </div>
                 <div className="room-items">
                     {rooms.length === 0 ? (
-                        <div style={{ padding: '16px', color: '#a0aec0', textAlign: 'center' }}>
-                            No rooms available.
-                        </div>
+                        <div className="no-rooms-message">No rooms available.</div>
                     ) : (
                         rooms.map(room => {
                             const unread = getUnreadCount(room.room_id);
@@ -252,17 +189,13 @@ function Chat() {
                                     <div className="room-info">
                                         <div className="room-name">
                                             {getRoomName(room)}
-                                            {unread > 0 && (
-                                                <span className="unread-badge">{unread}</span>
-                                            )}
+                                            {unread > 0 && <span className="unread-badge">{unread}</span>}
                                         </div>
                                         <div className="room-meta">
                                             {room.room_type === 'private' && <span className="badge-private">🔒</span>}
                                             {room.room_type === 'public' && <span className="badge-public">🌐</span>}
                                             <span>{getMessageCount(room.room_id)} messages</span>
-                                            {unread > 0 && (
-                                                <span className="unread-text">({unread} unread)</span>
-                                            )}
+                                            {unread > 0 && <span className="unread-text">({unread} unread)</span>}
                                         </div>
                                     </div>
                                 </div>
@@ -276,7 +209,6 @@ function Chat() {
             <div className="chat-area">
                 {currentRoom ? (
                     <>
-                        {/* Chat Header */}
                         <div className="chat-header">
                             <div>
                                 <span className="header-avatar">{getRoomAvatar(currentRoom)}</span>
@@ -284,12 +216,9 @@ function Chat() {
                             </div>
                         </div>
 
-                        {/* Messages */}
                         <div className="messages-container">
                             {messages.length === 0 ? (
-                                <div style={{ textAlign: 'center', color: '#a0aec0', padding: '40px' }}>
-                                    No messages yet. Start the conversation!
-                                </div>
+                                <div className="no-messages">No messages yet. Start the conversation!</div>
                             ) : (
                                 messages.map(msg => {
                                     const isOwn = msg.sender_id === user?.user_id;
@@ -320,7 +249,6 @@ function Chat() {
                             <div ref={messagesEndRef} />
                         </div>
 
-                        {/* Message Input */}
                         <form className="message-input-container" onSubmit={handleSendMessage}>
                             <input
                                 type="text"
@@ -328,9 +256,14 @@ function Chat() {
                                 value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 className="message-input"
+                                disabled={isSending} // <-- Disable input while sending
                             />
-                            <button type="submit" className="btn-send">
-                                <i className="fas fa-paper-plane"></i> Send
+                            <button 
+                                type="submit" 
+                                className="btn-send"
+                                disabled={isSending || !newMessage.trim()} // <-- Disable button
+                            >
+                                {isSending ? 'Sending...' : <><i className="fas fa-paper-plane"></i> Send</>}
                             </button>
                         </form>
                     </>

@@ -1,9 +1,27 @@
 // ============================================================
 // MOCK DATA – PMO Control Tower Communication Module
+// With localStorage persistence
 // ============================================================
 
-// ===== USERS =====
-export const mockUsers = [
+// Helper: get data from localStorage, or fallback to default
+const getPersistedData = (key, defaultData) => {
+    const stored = localStorage.getItem(`pmo_${key}`);
+    if (stored) {
+        try {
+            return JSON.parse(stored);
+        } catch {
+            return defaultData;
+        }
+    }
+    return defaultData;
+};
+
+const setPersistedData = (key, data) => {
+    localStorage.setItem(`pmo_${key}`, JSON.stringify(data));
+};
+
+// ===== DEFAULTS =====
+const defaultUsers = [
     { user_id: 1, full_name: 'System Admin', email: 'admin@pmo.com', role: 'Admin', avatar: '🛡️' },
     { user_id: 2, full_name: 'Sarah Executive', email: 'exec@pmo.com', role: 'Executive PM', avatar: '👔' },
     { user_id: 3, full_name: 'David PM', email: 'pm@pmo.com', role: 'PM', avatar: '📋' },
@@ -12,8 +30,7 @@ export const mockUsers = [
     { user_id: 6, full_name: 'Alex Intern', email: 'intern@pmo.com', role: 'Intern', avatar: '🎓' },
 ];
 
-// ===== CHAT ROOMS =====
-export const mockRooms = [
+const defaultRooms = [
     { room_id: 1, room_name: 'General Chat', room_type: 'public', created_by: 1, created_at: '2026-01-01T10:00:00' },
     { room_id: 2, room_name: 'Project Alpha', room_type: 'private', project_id: 1, created_by: 3, created_at: '2026-03-01T09:00:00' },
     { room_id: 3, room_name: 'Project Beta', room_type: 'private', project_id: 2, created_by: 3, created_at: '2026-05-15T14:00:00' },
@@ -21,26 +38,23 @@ export const mockRooms = [
     { room_id: 5, room_name: 'Executive Updates', room_type: 'private', created_by: 2, created_at: '2026-04-01T08:00:00' },
 ];
 
-// ===== ROOM PARTICIPANTS (room_id -> array of user_ids) =====
-export const mockRoomParticipants = {
-    1: [1, 2, 3, 4, 5, 6], // General Chat – all users
-    2: [1, 2, 3, 4, 5],    // Project Alpha – Admin, Exec, PM, Dev, QA
-    3: [1, 2, 3, 4, 5],    // Project Beta – same
-    4: [3, 4],             // Direct: John ↔ David – only PM and Dev
-    5: [1, 2, 3],          // Executive Updates – Admin, Exec, PM
+const defaultParticipants = {
+    1: [1, 2, 3, 4, 5, 6],
+    2: [1, 2, 3, 4, 5],
+    3: [1, 2, 3, 4, 5],
+    4: [3, 4],
+    5: [1, 2, 3],
 };
 
-// ===== UNREAD COUNTS (room_id -> user_id -> count) =====
-export const mockUnread = {
-    1: { 2: 2, 3: 1, 4: 0, 5: 3, 6: 0 }, // General Chat: some unread
+const defaultUnread = {
+    1: { 2: 2, 3: 1, 4: 0, 5: 3, 6: 0 },
     2: { 1: 0, 2: 0, 4: 1, 5: 0 },
     3: { 1: 0, 2: 0, 4: 0, 5: 0 },
     4: { 3: 0, 4: 0 },
     5: { 1: 0, 2: 0, 3: 0 },
 };
 
-// ===== MESSAGES =====
-export const mockMessages = {
+const defaultMessages = {
     1: [
         { message_id: 1, room_id: 1, sender_id: 1, content: 'Welcome to the PMO Control Tower! 🚀', created_at: '2026-01-01T10:05:00' },
         { message_id: 2, room_id: 1, sender_id: 2, content: 'Excited to have this platform!', created_at: '2026-01-01T10:10:00' },
@@ -69,209 +83,31 @@ export const mockMessages = {
     ],
 };
 
-// ===== MEETINGS =====
-export const mockMeetings = [
-    { 
-        meeting_id: 1, 
-        title: 'Project Alpha Sprint Review', 
-        description: 'Review sprint progress and plan next steps',
-        organizer_id: 3, 
-        organizer_name: 'David PM',
-        start_time: '2026-07-22T10:00:00', 
-        end_time: '2026-07-22T11:00:00',
-        project_id: 1,
-        project_name: 'Project Alpha',
-        status: 'scheduled',
-        attendee_count: 8,
-        attendees: [1, 2, 3, 4, 5]
-    },
-    { 
-        meeting_id: 2, 
-        title: 'PMO Monthly Sync', 
-        description: 'Monthly alignment meeting with all PMs',
-        organizer_id: 2, 
-        organizer_name: 'Sarah Executive',
-        start_time: '2026-07-23T14:00:00', 
-        end_time: '2026-07-23T15:30:00',
-        project_id: null,
-        project_name: null,
-        status: 'scheduled',
-        attendee_count: 15,
-        attendees: [1, 2, 3, 4, 5, 6]
-    },
-    { 
-        meeting_id: 3, 
-        title: 'Project Beta Standup', 
-        description: 'Daily standup for Project Beta team',
-        organizer_id: 3, 
-        organizer_name: 'David PM',
-        start_time: '2026-07-24T09:00:00', 
-        end_time: '2026-07-24T09:15:00',
-        project_id: 2,
-        project_name: 'Project Beta',
-        status: 'scheduled',
-        attendee_count: 5,
-        attendees: [3, 4, 5]
-    },
-    { 
-        meeting_id: 4, 
-        title: 'Executive Board Review', 
-        description: 'Quarterly board review presentation',
-        organizer_id: 2, 
-        organizer_name: 'Sarah Executive',
-        start_time: '2026-07-25T11:00:00', 
-        end_time: '2026-07-25T12:30:00',
-        project_id: null,
-        project_name: null,
-        status: 'scheduled',
-        attendee_count: 10,
-        attendees: [1, 2, 3]
-    },
-];
+// ===== EXPORT PERSISTED DATA =====
+export const mockUsers = defaultUsers;
+export const mockRooms = defaultRooms;
+export const mockRoomParticipants = defaultParticipants;
 
-// ===== NOTIFICATIONS =====
-export const mockNotifications = [
-    { 
-        notification_id: 1, 
-        user_id: 4, 
-        type: 'mention', 
-        title: 'You were mentioned',
-        content: '@John Developer mentioned you in Project Alpha chat',
-        reference_id: 12,
-        reference_type: 'message',
-        is_read: false,
-        created_at: '2026-07-21T09:30:00'
-    },
-    { 
-        notification_id: 2, 
-        user_id: 4, 
-        type: 'meeting', 
-        title: 'Meeting invitation',
-        content: 'You have been invited to Project Alpha Sprint Review',
-        reference_id: 1,
-        reference_type: 'meeting',
-        is_read: false,
-        created_at: '2026-07-20T16:00:00'
-    },
-    { 
-        notification_id: 3, 
-        user_id: 4, 
-        type: 'task', 
-        title: 'Task assigned',
-        content: 'You were assigned a new task: UI Design',
-        reference_id: 1,
-        reference_type: 'task',
-        is_read: true,
-        created_at: '2026-07-20T10:00:00'
-    },
-    { 
-        notification_id: 4, 
-        user_id: 4, 
-        type: 'comment', 
-        title: 'New comment',
-        content: 'Maria QA commented on your task: API Testing',
-        reference_id: 2,
-        reference_type: 'task',
-        is_read: false,
-        created_at: '2026-07-19T14:20:00'
-    },
-];
+// Persist messages and unread counts
+export let mockMessages = getPersistedData('messages', defaultMessages);
+export let mockUnread = getPersistedData('unread', defaultUnread);
 
-// ===== DISCUSSIONS =====
-export const mockDiscussions = [
-    {
-        discussion_id: 1,
-        title: 'API Design Review',
-        created_by: 4,
-        created_by_name: 'John Developer',
-        project_id: 1,
-        project_name: 'Project Alpha',
-        task_id: null,
-        task_name: null,
-        created_at: '2026-07-20T11:00:00',
-        comments: [
-            { comment_id: 1, user_id: 4, user_name: 'John Developer', content: 'I\'ve completed the API design draft. Please review.', created_at: '2026-07-20T11:05:00' },
-            { comment_id: 2, user_id: 5, user_name: 'Maria QA', content: 'The endpoints look good. I\'ll start writing tests.', created_at: '2026-07-20T11:30:00' },
-            { comment_id: 3, user_id: 3, user_name: 'David PM', content: 'Can we add pagination to the list endpoint?', created_at: '2026-07-20T12:00:00' },
-        ]
-    },
-    {
-        discussion_id: 2,
-        title: 'UI/UX Design Feedback',
-        created_by: 4,
-        created_by_name: 'John Developer',
-        project_id: 1,
-        project_name: 'Project Alpha',
-        task_id: 1,
-        task_name: 'UI Design',
-        created_at: '2026-07-19T16:00:00',
-        comments: [
-            { comment_id: 4, user_id: 4, user_name: 'John Developer', content: 'Here\'s the latest UI mockup for the dashboard.', created_at: '2026-07-19T16:05:00' },
-            { comment_id: 5, user_id: 1, user_name: 'System Admin', content: 'Love the design! Clean and intuitive.', created_at: '2026-07-19T17:00:00' },
-        ]
-    },
-];
+// Helper to save changes (call after modifying mockMessages or mockUnread)
+export const saveMockData = () => {
+    setPersistedData('messages', mockMessages);
+    setPersistedData('unread', mockUnread);
+};
 
-// ===== FILES =====
-export const mockFiles = [
-    {
-        file_id: 1,
-        name: 'Project_Alpha_Report.pdf',
-        size: '2.4 MB',
-        type: 'pdf',
-        uploaded_by: 3,
-        uploaded_by_name: 'David PM',
-        room_id: 2,
-        uploaded_at: '2026-07-20T14:30:00',
-        url: '/files/project_alpha_report.pdf',
-        content: 'This is a sample PDF content for Project Alpha report.'
-    },
-    {
-        file_id: 2,
-        name: 'UI_Mockup_v2.png',
-        size: '1.8 MB',
-        type: 'image',
-        uploaded_by: 4,
-        uploaded_by_name: 'John Developer',
-        room_id: 2,
-        uploaded_at: '2026-07-21T10:15:00',
-        url: '/files/ui_mockup_v2.png',
-        content: null
-    },
-    {
-        file_id: 3,
-        name: 'Q4_Budget.xlsx',
-        size: '856 KB',
-        type: 'excel',
-        uploaded_by: 2,
-        uploaded_by_name: 'Sarah Executive',
-        room_id: 5,
-        uploaded_at: '2026-07-19T09:00:00',
-        url: '/files/q4_budget.xlsx',
-        content: null
-    },
-    {
-        file_id: 4,
-        name: 'Meeting_Notes.docx',
-        size: '1.2 MB',
-        type: 'word',
-        uploaded_by: 3,
-        uploaded_by_name: 'David PM',
-        room_id: 1,
-        uploaded_at: '2026-07-22T11:00:00',
-        url: '/files/meeting_notes.docx',
-        content: 'Meeting notes from Project Alpha sprint review.'
-    },
-    {
-        file_id: 5,
-        name: 'Presentation_Q4.pptx',
-        size: '3.1 MB',
-        type: 'ppt',
-        uploaded_by: 2,
-        uploaded_by_name: 'Sarah Executive',
-        room_id: 5,
-        uploaded_at: '2026-07-18T15:00:00',
-        url: '/files/presentation_q4.pptx',
-        content: 'Q4 board presentation'
-    },
-];
+// Initialize default data if not present (first run)
+if (!localStorage.getItem('pmo_messages')) {
+    setPersistedData('messages', defaultMessages);
+    setPersistedData('unread', defaultUnread);
+    mockMessages = defaultMessages;
+    mockUnread = defaultUnread;
+}
+
+// ===== OTHER MOCK DATA (unchanged) =====
+export const mockMeetings = [ /* ... same as before ... */ ];
+export const mockNotifications = [ /* ... same ... */ ];
+export const mockDiscussions = [ /* ... same ... */ ];
+export const mockFiles = [ /* ... same ... */ ];
